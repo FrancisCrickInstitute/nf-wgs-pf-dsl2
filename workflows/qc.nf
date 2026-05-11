@@ -537,9 +537,8 @@ process run_report_and_calculate_ratio {
     """
 }
 
-workflow.onComplete { 
-    println ( workflow.success ? "\nQC run complete!": "Oops .. something went wrong" )
-}
+// Note: workflow.onComplete handlers removed to avoid confusion when other workflows run
+// These global handlers execute for ANY workflow completion, not just QC
 
 workflow QC {
     main: 
@@ -597,7 +596,7 @@ workflow QC {
         // Hs bam statistic summary
         hs_summary_ch = hs_stat_summary(hs_final_bamstat_ch.collect())
 
-        // Rmd run quality report generation and Calculate Pf:Hs read ratio -- 
+        // Rmd run quality report generation and Calculate Pf:Hs read ratio
         run_report_and_calculate_ratio(pf_summary_ch, hs_summary_ch, coverage_summary_ch, insert1_ch.collect(), params.rscript)
         
     emit: pf_bam_ch

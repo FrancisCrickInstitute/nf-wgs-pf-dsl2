@@ -24,7 +24,7 @@ process g_variant_calling {
     -R $genomes_dir/Pf3D7.fasta \
     -I ${pf_bam} \
     -ERC GVCF \
-    -ploidy 2 \
+    -ploidy ${params.ploidy} \
     --native-pair-hmm-threads 16 \
     -O ${pair_id}.chr${chrom}.g.vcf \
     --assembly-region-padding 100 \
@@ -44,9 +44,8 @@ process g_variant_calling {
 }
 
 
-workflow.onComplete { 
-    println ( workflow.success ? "\ngVCF run complete!": "Oops .. something went wrong" )
-}
+// Note: workflow.onComplete handlers removed to avoid confusion when other workflows run  
+// These global handlers execute for ANY workflow completion, not just gVCF
 
 workflow GVCF {
 
